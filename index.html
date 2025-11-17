@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkD@y - Iniciar Sesión</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Página de Login (visible por defecto) -->
+    <div id="login-page" class="login-page">
+        <div class="container">
+            <div class="header">
+                <h1>WorkD<span>@</span>y</h1>
+            </div>
+            
+            <div class="nav">
+                <div class="nav-item active" data-target="login-form">Inicio</div>
+                <div class="nav-item" data-target="register-form">Registrarse</div>
+                <div class="nav-item" data-target="help-form">Ayuda</div>
+            </div>
+            
+            <div class="form-container">
+                <!-- Formulario de Login -->
+                <div id="login-form" class="form active">
+                    <h2 class="form-title">Iniciar Sesión</h2>
+                    <div id="login-message" class="message"></div>
+                    <div class="input-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" placeholder="Ejemplo: Cristhian07">
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" placeholder="Contraseña">
+                    </div>
+                    <button class="btn" id="login-btn">Ingresa</button>
+                    <div class="link" id="forgot-password">Olvidé mi Contraseña</div>
+                    
+                    <div class="social-login">
+                        <div class="social-title">Síguenos en nuestras redes</div>
+                        <div class="social-buttons">
+                            <a href="https://facebook.com/workday" class="social-btn facebook" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://instagram.com/workday" class="social-btn instagram" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://wa.me/1234567890" class="social-btn whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario de Registro -->
+                <div id="register-form" class="form">
+                    <h2 class="form-title">Registrarse</h2>
+                    <div id="register-message" class="message"></div>
+                    <div class="input-group">
+                        <label for="new-username">Usuario</label>
+                        <input type="text" id="new-username" placeholder="Elige un nombre de usuario">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">Contraseña</label>
+                        <input type="password" id="new-password" placeholder="Crea una contraseña segura">
+                    </div>
+                    <div class="input-group">
+                        <label for="security-question">Pregunta de Seguridad</label>
+                        <select id="security-question">
+                            <option value="">Selecciona una pregunta</option>
+                            <option value="¿Cuál es el nombre de tu mascota?">¿Cuál es el nombre de tu mascota?</option>
+                            <option value="¿Cuál es tu color favorito?">¿Cuál es tu color favorito?</option>
+                            <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
+                            <option value="¿Cuál es el nombre de tu madre?">¿Cuál es el nombre de tu madre?</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="security-answer">Respuesta</label>
+                        <input type="text" id="security-answer" placeholder="Respuesta a la pregunta de seguridad">
+                    </div>
+                    <button class="btn" id="register-btn">Registrarse</button>
+                </div>
+                
+                <!-- Formulario de Ayuda -->
+                <div id="help-form" class="form">
+                    <h2 class="form-title">Ayuda</h2>
+                    <div class="input-group">
+                        <p>Si necesitas ayuda con tu cuenta, por favor contacta al soporte técnico.</p>
+                        <p>Email: soporte@workday.com</p>
+                        <p>Teléfono: +57 301 333 3333</p>
+                    </div>
+                    
+                    <div class="social-login">
+                        <div class="social-title">Síguenos en nuestras redes</div>
+                        <div class="social-buttons">
+                            <a href="https://facebook.com/workday" class="social-btn facebook" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://instagram.com/workday" class="social-btn instagram" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://wa.me/1234567890" class="social-btn whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario de Recuperación de Contraseña -->
+                <div id="recovery-form" class="form">
+                    <h2 class="form-title">Recuperar Contraseña</h2>
+                    <div id="recovery-message" class="message"></div>
+                    <div class="input-group">
+                        <label for="recovery-username">Usuario</label>
+                        <input type="text" id="recovery-username" placeholder="Ingresa tu nombre de usuario">
+                    </div>
+                    <div class="input-group" id="security-question-container">
+                        <label id="security-question-label">Pregunta de Seguridad</label>
+                        <p id="displayed-question"></p>
+                    </div>
+                    <div class="input-group security-question" id="security-answer-container">
+                        <label for="recovery-answer">Respuesta</label>
+                        <input type="text" id="recovery-answer" placeholder="Ingresa tu respuesta">
+                    </div>
+                    <div class="input-group security-question" id="new-password-container">
+                        <label for="recovery-new-password">Nueva Contraseña</label>
+                        <input type="password" id="recovery-new-password" placeholder="Ingresa tu nueva contraseña">
+                    </div>
+                    <button class="btn" id="recovery-btn">Continuar</button>
+                    <div class="link" id="back-to-login">Volver al inicio de sesión</div>
+                    
+                    <div class="social-login">
+                        <div class="social-title">Síguenos en nuestras redes</div>
+                        <div class="social-buttons">
+                            <a href="https://facebook.com/workday" class="social-btn facebook" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://instagram.com/workday" class="social-btn instagram" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://wa.me/1234567890" class="social-btn whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página de Dashboard (oculta inicialmente) -->
+    <div id="dashboard-page" class="dashboard-page" style="display: none;">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>WorkD<span>@</span>y Dashboard</h1>
+                <div class="user-info">
+                    <span id="welcome-user">Bienvenido, </span>
+                    <button class="logout-btn" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="welcome-message">
+                    <h2 id="dashboard-welcome">¡Bienvenido al Dashboard!</h2>
+                    <p>Esta es tu área personal de WorkD@y</p>
+                    <div class="dashboard-placeholder">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Panel de Control</h3>
+                        <p>El contenido de tu dashboard estará disponible pronto.</p>
+                        <p>Mientras tanto, puedes explorar las opciones disponibles.</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-features">
+                    <div class="feature-card">
+                        <i class="fas fa-user"></i>
+                        <h4>Mi Perfil</h4>
+                        <p>Gestiona tu información personal</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h4>Estadísticas</h4>
+                        <p>Visualiza tus métricas</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cog"></i>
+                        <h4>Configuración</h4>
+                        <p>Personaliza tu experiencia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
