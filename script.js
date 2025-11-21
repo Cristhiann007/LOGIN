@@ -1,11 +1,26 @@
-// Base de datos simulada (almacenamiento en memoria)
-let users = {
-    'admin': {
-        password: '1234',
-        securityQuestion: '¿Cuál es tu color favorito?',
-        securityAnswer: 'rojo'
+// Base de datos simulada (almacenamiento en memoria Y localStorage)
+let users = {};
+
+// Inicializar usuarios desde localStorage o con admin por defecto
+function initializeUsers() {
+    const storedUsers = JSON.parse(localStorage.getItem('users'));
+    
+    if (storedUsers) {
+        users = storedUsers;
     }
-};
+    
+    // SIEMPRE asegurar que el admin exista
+    if (!users['admin']) {
+        users['admin'] = {
+            password: '1234',
+            role: 'admin',
+            saldo: 0,
+            securityQuestion: '¿Cuál es tu color favorito?',
+            securityAnswer: 'rojo'
+        };
+        saveUsersToStorage();
+    }
+}
 
 // Elementos del DOM
 const loginPage = document.getElementById('login-page');
@@ -30,10 +45,37 @@ const securityAnswerContainer = document.getElementById('security-answer-contain
 const newPasswordContainer = document.getElementById('new-password-container');
 const displayedQuestion = document.getElementById('displayed-question');
 const welcomeUser = document.getElementById('welcome-user');
-const dashboardWelcome = document.getElementById('dashboard-welcome');
+const userRoleDisplay = document.getElementById('user-role-display');
+
+// Dashboards por rol
+const colaboradorDashboard = document.getElementById('colaborador-dashboard');
+const empleadorDashboard = document.getElementById('empleador-dashboard');
+const adminDashboard = document.getElementById('admin-dashboard');
 
 // Variable para almacenar el usuario actual
 let currentUser = null;
+
+// Inicializar la aplicación
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar usuarios (con admin por defecto)
+    initializeUsers();
+    
+    // Verificar si hay una sesión activa
+    checkActiveSession();
+});
+
+function saveUsersToStorage() {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
+function checkActiveSession() {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser && users[savedUser]) {
+        // Si hay un usuario guardado y existe en la base de datos, iniciar sesión automáticamente
+        currentUser = savedUser;
+        showDashboard(currentUser);
+    }
+}
 
 // Navegación entre formularios
 navItems.forEach(item => {
@@ -88,18 +130,43 @@ function showMessage(element, message, type) {
     element.className = `message ${type}`;
     element.style.display = 'block';
     
+    // Ocultar mensaje después de 4 segundos
     setTimeout(() => {
         element.style.display = 'none';
-    }, 3000);
+    }, 4000);
 }
 
-// Función para mostrar el dashboard
+// Función para mostrar el dashboard según el rol
 function showDashboard(username) {
     currentUser = username;
+    const user = users[username];
+    
+    // Guardar usuario actual en localStorage
+    localStorage.setItem('currentUser', username);
     
     // Actualizar mensajes de bienvenida
     welcomeUser.textContent = `Bienvenido, ${username}`;
-    dashboardWelcome.textContent = `¡Bienvenido ${username} al Dashboard!`;
+    userRoleDisplay.textContent = user.role;
+    userRoleDisplay.className = `role-badge ${user.role}`;
+    
+    // Ocultar todos los dashboards primero
+    colaboradorDashboard.style.display = 'none';
+    empleadorDashboard.style.display = 'none';
+    adminDashboard.style.display = 'none';
+    
+    // Mostrar dashboard según el rol
+    if (user.role === 'colaborador') {
+        colaboradorDashboard.style.display = 'block';
+        document.getElementById('saldo-actual').textContent = `$${user.saldo} COP`;
+        document.getElementById('dashboard-welcome').textContent = `¡Bienvenido ${username}!`;
+    } else if (user.role === 'empleador') {
+        empleadorDashboard.style.display = 'block';
+        document.getElementById('dashboard-welcome-empleador').textContent = `¡Bienvenido ${username}!`;
+    } else if (user.role === 'admin') {
+        adminDashboard.style.display = 'block';
+        document.getElementById('saldo-actual-admin').textContent = `$${user.saldo} COP`;
+        document.getElementById('dashboard-welcome-admin').textContent = `¡Bienvenido ${username}!`;
+    }
     
     // Mostrar dashboard y ocultar login
     loginPage.style.display = 'none';
@@ -112,7 +179,10 @@ function showDashboard(username) {
 
 // Función para volver al login
 function showLogin() {
+    // Limpiar usuario actual del localStorage al cerrar sesión
+    localStorage.removeItem('currentUser');
     currentUser = null;
+    
     dashboardPage.style.display = 'none';
     loginPage.style.display = 'flex';
     
@@ -136,6 +206,16 @@ loginBtn.addEventListener('click', () => {
         return;
     }
     
+    // DEBUG: Mostrar usuarios disponibles en consola
+    console.log('Usuarios disponibles:', Object.keys(users));
+    console.log('Usuario intentando login:', username);
+    console.log('Contraseña ingresada:', password);
+    console.log('Usuario existe?', users[username]);
+    if (users[username]) {
+        console.log('Contraseña guardada:', users[username].password);
+        console.log('Contraseña coincide?', users[username].password === password);
+    }
+    
     if (users[username] && users[username].password === password) {
         showMessage(loginMessage, `¡Bienvenido, ${username}! Redirigiendo...`, 'success');
         
@@ -150,18 +230,20 @@ loginBtn.addEventListener('click', () => {
 
 // Cerrar sesión
 logoutBtn.addEventListener('click', () => {
+    const userName = currentUser; // Guardar nombre antes de limpiar
     showLogin();
-    showMessage(loginMessage, `¡Hasta pronto, Sesión cerrada correctamente.`, 'success');
+    showMessage(loginMessage, `¡Hasta pronto, ${userName}! Sesión cerrada correctamente.`, 'success');
 });
 
 // Registro de usuario
 registerBtn.addEventListener('click', () => {
     const username = document.getElementById('new-username').value;
     const password = document.getElementById('new-password').value;
+    const role = document.getElementById('user-role').value;
     const securityQuestion = document.getElementById('security-question').value;
     const securityAnswer = document.getElementById('security-answer').value;
     
-    if (!username || !password || !securityQuestion || !securityAnswer) {
+    if (!username || !password || !role || !securityQuestion || !securityAnswer) {
         showMessage(registerMessage, 'Por favor, completa todos los campos', 'error');
         return;
     }
@@ -171,18 +253,29 @@ registerBtn.addEventListener('click', () => {
         return;
     }
     
+    if (password.length < 4) {
+        showMessage(registerMessage, 'La contraseña debe tener al menos 4 caracteres', 'error');
+        return;
+    }
+    
     // Registrar nuevo usuario
     users[username] = {
         password: password,
+        role: role,
+        saldo: role === 'colaborador' || role === 'admin' ? 0 : undefined,
         securityQuestion: securityQuestion,
         securityAnswer: securityAnswer.toLowerCase()
     };
     
-    showMessage(registerMessage, '¡Usuario registrado exitosamente!', 'success');
+    // GUARDAR INMEDIATAMENTE en localStorage
+    saveUsersToStorage();
+    
+    showMessage(registerMessage, `¡Usuario ${role} registrado exitosamente!`, 'success');
     
     // Limpiar formulario
     document.getElementById('new-username').value = '';
     document.getElementById('new-password').value = '';
+    document.getElementById('user-role').value = '';
     document.getElementById('security-question').value = '';
     document.getElementById('security-answer').value = '';
     
@@ -249,8 +342,15 @@ recoveryBtn.addEventListener('click', () => {
         return;
     }
     
-    // Actualizar contraseña
+    if (newPassword.length < 4) {
+        showMessage(recoveryMessage, 'La contraseña debe tener al menos 4 caracteres', 'error');
+        return;
+    }
+    
+    // Actualizar contraseña y GUARDAR en localStorage
     users[username].password = newPassword;
+    saveUsersToStorage();
+    
     showMessage(recoveryMessage, '¡Contraseña actualizada exitosamente!', 'success');
     
     // Volver al login después de 2 segundos
@@ -270,4 +370,97 @@ recoveryBtn.addEventListener('click', () => {
         securityAnswerContainer.classList.add('security-question');
         newPasswordContainer.classList.add('security-question');
     }, 2000);
+});
+
+// Funcionalidades para Colaborador
+document.getElementById('buscar-tareas-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=buscar-tareas`;
+});
+
+document.getElementById('recargar-saldo-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=recargar-saldo`;
+    /*const amount = prompt('Ingrese el monto a recargar (COP):');
+    if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+        users[currentUser].saldo += parseInt(amount);
+        // GUARDAR el cambio en localStorage
+        saveUsersToStorage();
+        document.getElementById('saldo-actual').textContent = `$${users[currentUser].saldo} COP`;
+        alert(`Saldo recargado exitosamente. Nuevo saldo: $${users[currentUser].saldo} COP`);
+    } else {
+        alert('Por favor, ingresa un monto válido');
+    }*/
+});
+
+document.getElementById('actualizar-datos-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=actualizar-datos`;
+});
+
+document.getElementById('generar-certificado-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=generar-certificado`;
+});
+
+// Funcionalidades para Empleador
+document.getElementById('generar-tarea-btn').addEventListener('click', () => {
+    // Guardar usuario actual antes de redirigir
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `empleador.html?user=${currentUser}&section=generar-tarea`;
+});
+
+document.getElementById('calificar-colaborador-btn').addEventListener('click', () => {
+    // Guardar usuario actual antes de redirigir
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `empleador.html?user=${currentUser}&section=calificar-colaborador`;
+});
+
+document.getElementById('actualizar-datos-empleador-btn').addEventListener('click', () => {
+    // Guardar usuario actual antes de redirigir
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `empleador.html?user=${currentUser}&section=actualizar-datos`;
+});
+
+// Funcionalidades para Admin
+document.getElementById('admin-buscar-tareas-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=buscar-tareas`;
+});
+
+document.getElementById('admin-recaragar-saldo-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=recargar-saldo`;
+    /*const amount = prompt('Ingrese el monto a recargar (COP):');
+    if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+        users[currentUser].saldo += parseInt(amount);
+        // GUARDAR el cambio en localStorage
+        saveUsersToStorage();
+        document.getElementById('saldo-actual-admin').textContent = `$${users[currentUser].saldo} COP`;
+        alert(`Saldo recargado exitosamente. Nuevo saldo: $${users[currentUser].saldo} COP`);
+    } else {
+        alert('Por favor, ingresa un monto válido');
+    }*/
+});
+
+document.getElementById('admin-actualizar-datos-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=actualizar-datos`;
+});
+
+document.getElementById('admin-generar-certificado-btn').addEventListener('click', () => {
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `colaborador.html?user=${currentUser}&section=generar-certificado`;
+});
+
+document.getElementById('admin-generar-tarea-btn').addEventListener('click', () => {
+    // Guardar usuario actual antes de redirigir
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `empleador.html?user=${currentUser}&section=generar-tarea`;
+});
+
+document.getElementById('admin-calificar-colaborador-btn').addEventListener('click', () => {
+    // Guardar usuario actual antes de redirigir
+    localStorage.setItem('currentUser', currentUser);
+    window.location.href = `empleador.html?user=${currentUser}&section=calificar-colaborador`;
 });

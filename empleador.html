@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkD@y - Panel Empleador</title>
+    <link rel="stylesheet" href="empleador.css">
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="empleador-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1>WorkD<span>@</span>y - Panel Empleador</h1>
+            <div class="user-info">
+                <span id="welcome-user">Bienvenido, </span>
+                <span class="role-badge empleador">Empleador</span>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar Sesión
+                </button>
+                <button class="back-btn" id="back-dashboard-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="empleador-nav">
+            <div class="nav-item active" data-target="generar-tarea">Generar Tarea</div>
+            <div class="nav-item" data-target="calificar-colaborador">Calificar Colaborador</div>
+            <div class="nav-item" data-target="actualizar-datos">Actualizar Datos</div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="empleador-content">
+            <!-- Sección Generar Tarea -->
+            <div id="generar-tarea" class="content-section active">
+                <h2>Generar Nueva Tarea</h2>
+                <div id="tarea-message" class="message"></div>
+                
+                <form class="tarea-form" id="tarea-form">
+                    <div class="form-group">
+                        <label for="nombre-tarea">Nombre de la Tarea *</label>
+                        <input type="text" id="nombre-tarea" required placeholder="Ej: Pintar pared de oficina">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="area-tarea">Área Requerida *</label>
+                        <select id="area-tarea" required>
+                            <option value="">Selecciona un área</option>
+                            <option value="limpieza">Limpieza</option>
+                            <option value="construccion">Construcción</option>
+                            <option value="jardineria">Jardinería</option>
+                            <option value="pintura">Pintura</option>
+                            <option value="plomeria">Plomería</option>
+                            <option value="electricidad">Electricidad</option>
+                            <option value="carpinteria">Carpintería</option>
+                            <option value="mecanica">Mecánica</option>
+                            <option value="tecnologia">Tecnología</option>
+                            <option value="diseño">Diseño</option>
+                            <option value="administrativo">Administrativo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion-tarea">Dirección *</label>
+                        <input type="text" id="direccion-tarea" required placeholder="Dirección donde se realizará la tarea">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="celular-tarea">Celular de Contacto *</label>
+                        <input type="tel" id="celular-tarea" required placeholder="Ej: 3001234567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion-tarea">Descripción de la Tarea *</label>
+                        <textarea id="descripcion-tarea" required placeholder="Describe detalladamente la tarea a realizar..." rows="5"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i>
+                        Generar Tarea
+                    </button>
+                </form>
+
+                <!-- Lista de Tareas Generadas -->
+                <div class="tareas-list">
+                    <h3>Tareas Generadas</h3>
+                    <div id="lista-tareas" class="tareas-container">
+                        <!-- Las tareas se mostrarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Calificar Colaborador -->
+            <div id="calificar-colaborador" class="content-section">
+                <h2>Calificar Colaboradores</h2>
+                <p class="section-description">Colaboradores que han completado tus tareas</p>
+                
+                <div id="calificacion-message" class="message"></div>
+                
+                <div id="lista-colaboradores" class="colaboradores-container">
+                    <!-- Los colaboradores se mostrarán aquí dinámicamente -->
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No hay colaboradores para calificar aún</p>
+                        <small>Los colaboradores aparecerán aquí cuando completen tus tareas</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Actualizar Datos -->
+            <div id="actualizar-datos" class="content-section">
+                <h2>Actualizar Mis Datos</h2>
+                <div id="actualizar-message" class="message"></div>
+                
+                <form class="actualizar-form" id="actualizar-form">
+                    <div class="form-group">
+                        <label for="actualizar-usuario">Usuario *</label>
+                        <input type="text" id="actualizar-usuario" readonly>
+                        <small class="form-text">El usuario no se puede modificar</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actualizar-password">Nueva Contraseña</label>
+                        <input type="password" id="actualizar-password" placeholder="Dejar en blanco para mantener la actual">
+                        <small class="form-text">Mínimo 6 caracteres</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actualizar-security-question">Pregunta de Seguridad *</label>
+                        <select id="actualizar-security-question" required>
+                            <option value="">Selecciona una pregunta</option>
+                            <option value="¿Cuál es el nombre de tu mascota?">¿Cuál es el nombre de tu mascota?</option>
+                            <option value="¿Cuál es tu color favorito?">¿Cuál es tu color favorito?</option>
+                            <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
+                            <option value="¿Cuál es el nombre de tu madre?">¿Cuál es el nombre de tu madre?</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actualizar-security-answer">Respuesta de Seguridad *</label>
+                        <input type="text" id="actualizar-security-answer" required placeholder="Respuesta a la pregunta de seguridad">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar Cambios
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Calificar -->
+    <div id="calificar-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Calificar Colaborador</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Califica a <strong id="colaborador-nombre"></strong> por la tarea: <strong id="tarea-nombre"></strong></p>
+                
+                <div class="rating-section">
+                    <div class="stars">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <div class="rating-text" id="rating-text">Selecciona una calificación</div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="cancelar-calificacion">Cancelar</button>
+                    <button class="btn btn-primary" id="confirmar-calificacion">Confirmar Calificación</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="empleador.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkD@y - Panel Colaborador</title>
+    <link rel="stylesheet" href="colaborador.css">
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="colaborador-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1>WorkD<span>@</span>y - Panel Colaborador</h1>
+            <div class="user-info">
+                <span id="welcome-user">Bienvenido, </span>
+                <span class="role-badge colaborador">Colaborador</span>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar Sesión
+                </button>
+                <button class="back-btn" id="back-dashboard-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="colaborador-nav">
+            <div class="nav-item active" data-target="buscar-tareas">Buscar Tareas</div>
+            <div class="nav-item" data-target="mis-tareas">Mis Tareas</div>
+            <div class="nav-item" data-target="recargar-saldo">Recargar Saldo</div>
+            <div class="nav-item" data-target="actualizar-datos">Actualizar Datos</div>
+            <div class="nav-item" data-target="generar-certificado">Generar Certificado</div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="colaborador-content">
+            <!-- Sección Buscar Tareas -->
+            <div id="buscar-tareas" class="content-section active">
+                <h2>Buscar Tareas Disponibles</h2>
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label for="filter-area">Filtrar por área:</label>
+                        <select id="filter-area">
+                            <option value="">Todas las áreas</option>
+                            <option value="limpieza">Limpieza</option>
+                            <option value="construccion">Construcción</option>
+                            <option value="jardineria">Jardinería</option>
+                            <option value="pintura">Pintura</option>
+                            <option value="plomeria">Plomería</option>
+                            <option value="electricidad">Electricidad</option>
+                            <option value="carpinteria">Carpintería</option>
+                            <option value="mecanica">Mecánica</option>
+                            <option value="tecnologia">Tecnología</option>
+                            <option value="diseño">Diseño</option>
+                            <option value="administrativo">Administrativo</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="search-tarea">Buscar por nombre:</label>
+                        <input type="text" id="search-tarea" placeholder="Nombre de la tarea...">
+                    </div>
+                </div>
+                
+                <div id="tareas-message" class="message"></div>
+                
+                <div id="lista-tareas-disponibles" class="tareas-container">
+                    <!-- Las tareas disponibles se mostrarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Sección Mis Tareas -->
+            <div id="mis-tareas" class="content-section">
+                <h2>Mis Tareas</h2>
+                
+                <!-- Tareas en Progreso -->
+                <div class="tareas-section">
+                    <h3>Tareas en Progreso</h3>
+                    <div id="lista-tareas-progreso" class="tareas-container">
+                        <!-- Tareas aceptadas pero no finalizadas -->
+                    </div>
+                </div>
+
+                <!-- Tareas Completadas -->
+                <div class="tareas-section">
+                    <h3>Tareas Completadas</h3>
+                    <div id="lista-tareas-completadas-historial" class="tareas-container">
+                        <!-- Tareas ya finalizadas -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Recargar Saldo -->
+            <div id="recargar-saldo" class="content-section">
+                <h2>Recargar Saldo</h2>
+                <div class="saldo-section">
+                    <div class="saldo-card">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Saldo Actual</h3>
+                        <p class="saldo-amount" id="saldo-actual">$0 COP</p>
+                    </div>
+                </div>
+                
+                <div id="saldo-message" class="message"></div>
+                
+                <form class="recarga-form" id="recarga-form">
+                    <div class="form-group">
+                        <label for="monto-recarga">Monto a Recargar (COP) *</label>
+                        <input type="number" id="monto-recarga" required min="1000" placeholder="Ej: 50000">
+                        <small class="form-text">Mínimo $1,000 COP</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="metodo-pago">Método de Pago *</label>
+                        <select id="metodo-pago" required>
+                            <option value="">Selecciona método de pago</option>
+                            <option value="tarjeta">Tarjeta Débito/Crédito</option>
+                            <option value="transferencia">Transferencia Bancaria</option>
+                            <option value="efectivo">Pago en Efectivo</option>
+                            <option value="nequi">Nequi</option>
+                            <option value="daviplata">DaviPlata</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i>
+                        Recargar Saldo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sección Actualizar Datos -->
+            <div id="actualizar-datos" class="content-section">
+                <h2>Actualizar Mis Datos</h2>
+                <div id="actualizar-message" class="message"></div>
+                
+                <form class="actualizar-form" id="actualizar-form">
+                    <div class="form-group">
+                        <label for="actualizar-usuario">Usuario *</label>
+                        <input type="text" id="actualizar-usuario" readonly>
+                        <small class="form-text">El usuario no se puede modificar</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actualizar-password">Nueva Contraseña</label>
+                        <input type="password" id="actualizar-password" placeholder="Dejar en blanco para mantener la actual">
+                        <small class="form-text">Mínimo 6 caracteres</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actualizar-security-question">Pregunta de Seguridad *</label>
+                        <select id="actualizar-security-question" required>
+                            <option value="">Selecciona una pregunta</option>
+                            <option value="¿Cuál es el nombre de tu mascota?">¿Cuál es el nombre de tu mascota?</option>
+                            <option value="¿Cuál es tu color favorito?">¿Cuál es tu color favorito?</option>
+                            <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
+                            <option value="¿Cuál es el nombre de tu madre?">¿Cuál es el nombre de tu madre?</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actualizar-security-answer">Respuesta de Seguridad *</label>
+                        <input type="text" id="actualizar-security-answer" required placeholder="Respuesta a la pregunta de seguridad">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar Cambios
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sección Generar Certificado -->
+            <div id="generar-certificado" class="content-section">
+                <h2>Generar Certificado Laboral</h2>
+                <div id="certificado-message" class="message"></div>
+                
+                <div class="certificado-info">
+                    <div class="info-card">
+                        <i class="fas fa-tasks"></i>
+                        <h4>Tareas Completadas</h4>
+                        <p id="tareas-completadas">0</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-star"></i>
+                        <h4>Calificación Promedio</h4>
+                        <p id="calificacion-promedio">0.0</p>
+                    </div>
+                </div>
+
+                <div class="tareas-completadas-list">
+                    <h3>Historial de Tareas</h3>
+                    <div id="lista-tareas-completadas" class="tareas-container">
+                        <!-- Las tareas completadas se mostrarán aquí -->
+                        <div class="empty-state">
+                            <i class="fas fa-file-certificate"></i>
+                            <p>No hay tareas completadas aún</p>
+                            <small>Completa tareas para generar tu certificado laboral</small>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="generar-certificado-btn">
+                    <i class="fas fa-download"></i>
+                    Generar Certificado PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Aceptar Tarea -->
+    <div id="aceptar-tarea-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aceptar Tarea</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que quieres aceptar la tarea: <strong id="tarea-modal-nombre"></strong>?</p>
+                <div class="tarea-detalles">
+                    <p><strong>Área:</strong> <span id="tarea-modal-area"></span></p>
+                    <p><strong>Dirección:</strong> <span id="tarea-modal-direccion"></span></p>
+                    <p><strong>Contacto:</strong> <span id="tarea-modal-celular"></span></p>
+                    <p><strong>Descripción:</strong> <span id="tarea-modal-descripcion"></span></p>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="cancelar-aceptar">Cancelar</button>
+                    <button class="btn btn-primary" id="confirmar-aceptar">Aceptar Tarea</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="colaborador.js"></script>
+</body>
+</html>

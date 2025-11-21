@@ -67,6 +67,14 @@
                         <input type="password" id="new-password" placeholder="Crea una contraseña segura">
                     </div>
                     <div class="input-group">
+                        <label for="user-role">Tipo de Usuario</label>
+                        <select id="user-role">
+                            <option value="">Selecciona tu rol</option>
+                            <option value="colaborador">Colaborador</option>
+                            <option value="empleador">Empleador</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
                         <label for="security-question">Pregunta de Seguridad</label>
                         <select id="security-question">
                             <option value="">Selecciona una pregunta</option>
@@ -89,7 +97,7 @@
                     <div class="input-group">
                         <p>Si necesitas ayuda con tu cuenta, por favor contacta al soporte técnico.</p>
                         <p>Email: soporte@workday.com</p>
-                        <p>Teléfono: +57 301 333 3333</p>
+                        <p>Teléfono: +57 301 403 1635</p>
                     </div>
                     
                     <div class="social-login">
@@ -157,6 +165,7 @@
                 <h1>WorkD<span>@</span>y Dashboard</h1>
                 <div class="user-info">
                     <span id="welcome-user">Bienvenido, </span>
+                    <span id="user-role-display" class="role-badge"></span>
                     <button class="logout-btn" id="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Cerrar Sesión
@@ -164,33 +173,128 @@
                 </div>
             </div>
             
-            <div class="dashboard-content">
+            <!-- Dashboard para Colaborador -->
+            <div id="colaborador-dashboard" class="dashboard-content" style="display: none;">
                 <div class="welcome-message">
-                    <h2 id="dashboard-welcome">¡Bienvenido al Dashboard!</h2>
-                    <p>Esta es tu área personal de WorkD@y</p>
-                    <div class="dashboard-placeholder">
-                        <i class="fas fa-cogs"></i>
-                        <h3>Panel de Control</h3>
-                        <p>El contenido de tu dashboard estará disponible pronto.</p>
-                        <p>Mientras tanto, puedes explorar las opciones disponibles.</p>
+                    <h2 id="dashboard-welcome">¡Bienvenido Colaborador!</h2>
+                    <p>Gestiona tus tareas y saldo</p>
+                </div>
+                
+                <div class="saldo-section">
+                    <div class="saldo-card">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Saldo Actual</h3>
+                        <p class="saldo-amount" id="saldo-actual">$0 COP</p>
                     </div>
                 </div>
                 
-                <div class="dashboard-features">
-                    <div class="feature-card">
-                        <i class="fas fa-user"></i>
-                        <h4>Mi Perfil</h4>
-                        <p>Gestiona tu información personal</p>
+                <div class="dashboard-actions">
+                    <div class="action-card" id="buscar-tareas-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233498db'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E" alt="Buscar Tareas">
+                        <h4>Buscar Tareas</h4>
+                        <p>Encuentra tareas disponibles</p>
                     </div>
-                    <div class="feature-card">
-                        <i class="fas fa-chart-bar"></i>
-                        <h4>Estadísticas</h4>
-                        <p>Visualiza tus métricas</p>
+                    
+                    <div class="action-card" id="recargar-saldo-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2325D366'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E" alt="Recargar Saldo">
+                        <h4>Recargar Saldo</h4>
+                        <p>Agrega dinero a tu cuenta</p>
                     </div>
-                    <div class="feature-card">
-                        <i class="fas fa-cog"></i>
-                        <h4>Configuración</h4>
-                        <p>Personaliza tu experiencia</p>
+                    
+                    <div class="action-card" id="actualizar-datos-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFA500'%3E%3Cpath d='M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z'/%3E%3C/svg%3E" alt="Actualizar Datos">
+                        <h4>Actualizar Datos</h4>
+                        <p>Modifica tu información</p>
+                    </div>
+                    
+                    <div class="action-card" id="generar-certificado-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E4405F'%3E%3Cpath d='M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'/%3E%3C/svg%3E" alt="Generar Certificado">
+                        <h4>Generar Certificado</h4>
+                        <p>Certificado laboral</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard para Empleador -->
+            <div id="empleador-dashboard" class="dashboard-content" style="display: none;">
+                <div class="welcome-message">
+                    <h2 id="dashboard-welcome-empleador">¡Bienvenido Empleador!</h2>
+                    <p>Gestiona tus tareas y colaboradores</p>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <div class="action-card" id="generar-tarea-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233498db'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E" alt="Generar Tarea">
+                        <h4>Generar Tarea</h4>
+                        <p>Crea nuevas tareas</p>
+                    </div>
+                    
+                    <div class="action-card" id="calificar-colaborador-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFD700'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E" alt="Calificar Colaborador">
+                        <h4>Calificar Colaborador</h4>
+                        <p>Evalúa a tus colaboradores</p>
+                    </div>
+                    
+                    <div class="action-card" id="actualizar-datos-empleador-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFA500'%3E%3Cpath d='M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z'/%3E%3C/svg%3E" alt="Actualizar Datos">
+                        <h4>Actualizar Datos</h4>
+                        <p>Modifica tu información</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard para Admin -->
+            <div id="admin-dashboard" class="dashboard-content" style="display: none;">
+                <div class="welcome-message">
+                    <h2 id="dashboard-welcome-admin">¡Bienvenido Administrador!</h2>
+                    <p>Panel de control completo</p>
+                </div>
+                
+                <div class="saldo-section">
+                    <div class="saldo-card">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Saldo Actual</h3>
+                        <p class="saldo-amount" id="saldo-actual-admin">$0 COP</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <!-- Funciones de Colaborador -->
+                    <div class="action-card" id="admin-buscar-tareas-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233498db'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E" alt="Buscar Tareas">
+                        <h4>Buscar Tareas</h4>
+                        <p>Encuentra tareas disponibles</p>
+                    </div>
+                    
+                    <div class="action-card" id="admin-recaragar-saldo-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2325D366'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E" alt="Recargar Saldo">
+                        <h4>Recargar Saldo</h4>
+                        <p>Agrega dinero a tu cuenta</p>
+                    </div>
+                    
+                    <div class="action-card" id="admin-actualizar-datos-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFA500'%3E%3Cpath d='M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z'/%3E%3C/svg%3E" alt="Actualizar Datos">
+                        <h4>Actualizar Datos</h4>
+                        <p>Modifica tu información</p>
+                    </div>
+                    
+                    <div class="action-card" id="admin-generar-certificado-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E4405F'%3E%3Cpath d='M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'/%3E%3C/svg%3E" alt="Generar Certificado">
+                        <h4>Generar Certificado</h4>
+                        <p>Certificado laboral</p>
+                    </div>
+                    
+                    <!-- Funciones de Empleador -->
+                    <div class="action-card" id="admin-generar-tarea-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233498db'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E" alt="Generar Tarea">
+                        <h4>Generar Tarea</h4>
+                        <p>Crea nuevas tareas</p>
+                    </div>
+                    
+                    <div class="action-card" id="admin-calificar-colaborador-btn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFD700'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E" alt="Calificar Colaborador">
+                        <h4>Calificar Colaborador</h4>
+                        <p>Evalúa a tus colaboradores</p>
                     </div>
                 </div>
             </div>
